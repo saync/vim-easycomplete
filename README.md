@@ -265,7 +265,7 @@ All supported languages:
 | r           | R         | r-languageserver         | Yes                | R            |     |
 | rb          | Ruby      | solargraph               | Yes                | ruby/bundle  |     |
 | lua         | Lua       | `sumneko_lua`            | Yes                | Lua          |     |
-| nim         | Nim       | nimls                    | Yes                | nim/nimble   |     |
+| nim         | Nim       | nimlsp                    | Yes                | nim/nimble   |     |
 | rust        | Rust      | `rust_analyzer`          | Yes                | None         |     |
 | kt          | Kotlin    | `kotlin_language_server` | Yes                | java/jdk     |     |
 | grvy        | Groovy    | groovyls                 | Yes                | java/jdk     |     |

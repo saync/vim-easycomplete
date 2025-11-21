@@ -264,7 +264,7 @@ LSP 服务会安装在本地路径： `~/.config/vim-easycomplete/servers`。
 | r           | R         | r-languageserver         | Yes                | R            |          |
 | rb          | Ruby      | solargraph               | Yes                | ruby/bundle  |          |
 | lua         | Lua       | `sumneko_lua`            | Yes                | Lua          |          |
-| nim         | Nim       | nimls                    | Yes                | nim/nimble   |          |
+| nim         | Nim       | nimlsp                    | Yes                | nim/nimble   |          |
 | rust        | Rust      | `rust_analyzer`          | Yes                | 无           |          |
 | kt          | Kotlin    | `kotlin_language_server` | Yes                | java/jdk     |          |
 | grvy        | Groovy    | groovyls                 | Yes                | java/jdk     |          |
