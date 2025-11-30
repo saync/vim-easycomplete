@@ -145,11 +145,15 @@ function! easycomplete#sources#deno#IsDenoProject()
   let vscode_settings = findfile(vscode_config . "/settings.json")
   if empty(vscode_settings) | return v:false | endif
   let vscode_json_str = join(readfile(vscode_settings), "")
-  if has("nvim")
-    let vscode_json_obj = json_decode(vscode_json_str)
-  else
-    let vscode_json_obj = js_decode(vscode_json_str)
-  endif
+  try
+    if has("nvim")
+      let vscode_json_obj = json_decode(vscode_json_str)
+    else
+      let vscode_json_obj = js_decode(vscode_json_str)
+    endif
+  catch
+    return v:false
+  endtry
   if get(vscode_json_obj, "deno.enable", v:false)
     " TODO 还需做这这个判断  "deno.unstable": true
     if !get(vscode_json_obj, "deno.lint", v:false)
