@@ -440,3 +440,7 @@ More examples here: [full config example](https://github.com/jayli/vim-easycompl
 ### License
 
 MIT
+
+----------------
+
+[![Star History Chart](https://api.star-history.com/svg?repos=jayli/vim-easycomplete&type=date&legend=top-left)](https://www.star-history.com/#jayli/vim-easycomplete&type=date&legend=top-left)
