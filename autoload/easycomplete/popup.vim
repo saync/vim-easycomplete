@@ -227,35 +227,35 @@ function! s:float(content, hl, direction, ft, offset, float_type)
   " handle height
   let screen_enc = (win_screenpos(win_getid())[0] - 1)
   if !a:direction " 正常向下
-    if winline() + prevw_height + (g:easycomplete_winborder ? 2 : 0) <= winheight(win_getid())
+    if winline() + prevw_height + 2 <= winheight(win_getid())
       " 菜单向下展开ok
       let opt.row = winline() + 1 + screen_enc
-    elseif winline() + prevw_height + (g:easycomplete_winborder ? 2 : 0) >= winheight(win_getid())
+    elseif winline() + prevw_height + 2 >= winheight(win_getid())
           \ && prevw_height >= 3
-          \ && winheight(win_getid()) - winline() >= 3 + (g:easycomplete_winborder ? 2 : 0)
+          \ && winheight(win_getid()) - winline() >= 5
       " 压缩float框向下展开
-      let opt.height = winheight(win_getid()) - winline() - (g:easycomplete_winborder ? 1 : 0)
+      let opt.height = winheight(win_getid()) - winline() - 1
       let opt.row = winline() + 1 + screen_enc
     else
       " 菜单向上展开
-      let opt.row = winline() - prevw_height + screen_enc - (g:easycomplete_winborder ? 2 : 0)
+      let opt.row = winline() - prevw_height + screen_enc - 2
     endif
   else " 正常向上
-    if winheight(win_getid()) - winline() + 1 + prevw_height + (g:easycomplete_winborder ? 2 : 0) <= winheight(win_getid())
+    if winheight(win_getid()) - winline() + 3 + prevw_height <= winheight(win_getid())
       " 单窗口内空间足够，菜单向上展开 ok
-      let opt.row = winline() - prevw_height + screen_enc + (g:easycomplete_winborder ? 2 : 0)
-    elseif winheight(win_getid()) - winline() + prevw_height + 1 + (g:easycomplete_winborder ? 2 : 0) > winheight(win_getid())
+      let opt.row = winline() - prevw_height + screen_enc + 2
+    elseif winheight(win_getid()) - winline() + prevw_height + 3 > winheight(win_getid())
           \ && prevw_height >= 3
-          \ && winline() >= 4 + (g:easycomplete_winborder ? 2 : 0)
+          \ && winline() >= 6
       " 单窗口内向上展开所需空间不够，要判断窗口上方还有没有多余空间
       let t_pos = screen_enc + ((winline() - prevw_height) -1)
       if t_pos >= 0
         " 占用顶部空间全部展开
         let opt.height = prevw_height
-        let opt.row = t_pos + 1 - (g:easycomplete_winborder ? 2 : 0)
+        let opt.row = t_pos - 1
       else
         " 占用顶部空间也不够展示，则向上压缩展开
-        let opt.height = prevw_height + t_pos - (g:easycomplete_winborder ? 2 : 0)
+        let opt.height = prevw_height + t_pos - 2
         let opt.row = 1
       endif
     else  " 单窗口内向下展开
@@ -476,34 +476,29 @@ function! s:popup(info)
   else
     let pum_pos = easycomplete#pum#PumGetPos()
   endif
-  if get(pum_pos, 'scrollbar')
-    let right_avail_col  = pum_pos.col + pum_pos.width + 1
-  else
-    let right_avail_col  = pum_pos.col + pum_pos.width
-  endif
+  
+  let right_avail_col = pum_pos.col + pum_pos.width + 1
   let left_avail_col = pum_pos.col - 2
+                                                              
+  let right_avail = &co - right_avail_col - 1 
+  let left_avail = left_avail_col
 
-  let right_avail = &co - right_avail_col - (g:easycomplete_winborder ? 2 : 0)
-  let left_avail = left_avail_col + 1 - (g:easycomplete_winborder ? 2 : 0)
-
-  if right_avail >= prevw_width + (g:easycomplete_winborder ? 2 : 0)
-    let opt.col = right_avail_col + (g:easycomplete_winborder ? 2 : 0)
-  elseif left_avail >= prevw_width + (g:easycomplete_winborder ? 2 : 0)
-    let opt.col = left_avail_col - prevw_width + 1 - (g:easycomplete_winborder ? 2 : 0)
+  if right_avail >= prevw_width + 1
+    let opt.col = right_avail_col + 1
+  elseif left_avail >= prevw_width + 1 
+    let opt.col = left_avail_col - prevw_width - 2
   else
     " 如果左右都没有正常空间可以展开
-
     " 如果左右空间都小于 20，直接关闭
     if right_avail <= 20 && left_avail <= 20
       call easycomplete#popup#close("popup")
       return
     endif
-
     if right_avail >= left_avail
       " 右侧空间较大
       " let opt.col = float2nr(right_avail_col) + (g:easycomplete_winborder ? 2 : 0)
-      let opt.col = pum_pos.col + pum_pos.width + 1 + (g:easycomplete_winborder ? 2 : 0)
-      let opt.width = float2nr(right_avail) - (g:easycomplete_winborder ? 2 : 0)
+      let opt.col = pum_pos.col + pum_pos.width + 2
+      let opt.width = float2nr(right_avail) - 1
     else
       " 左侧空间较大
       let opt.col = 0
@@ -519,8 +514,7 @@ function! s:popup(info)
     let opt.row = winline() + screen_enc
   else
     " 菜单向上展开
-    let opt.row = l:screen_line - opt.height - 1
-    let opt.row -= (g:easycomplete_winborder ? 2 : 0)
+    let opt.row = l:screen_line - opt.height - 2
   endif
 
   if s:is_nvim
@@ -585,6 +579,9 @@ function! s:VimShow(opt, windowtype, float_type)
         \ 'maxheight': a:opt.height,
         \ 'firstline': 0,
         \ 'fixed': 1,
+        \ 'border': [],
+        \ 'borderchars': ['─', '│', '─', '│', '╭', '╮', '╯', '╰'],
+        \ 'moved': 'any',
         \ }
   if exists('a:opt.highlight')
     let opt.highlight = a:opt.highlight
