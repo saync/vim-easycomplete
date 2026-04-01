@@ -581,7 +581,6 @@ function! s:VimShow(opt, windowtype, float_type)
         \ 'fixed': 1,
         \ 'border': [],
         \ 'borderchars': ['─', '│', '─', '│', '╭', '╮', '╯', '╰'],
-        \ 'moved': 'any',
         \ }
   if exists('a:opt.highlight')
     let opt.highlight = a:opt.highlight
