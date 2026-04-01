@@ -190,17 +190,6 @@ function! s:BindingTypingCommandOnce()
   " luasnip 在选中模式下的跳转，应该闭包在 luasnip.lua 中
   " snoremap <expr> <S-Tab> easycomplete#CleverShiftTab()
   " snoremap <expr> <Tab> easycomplete#CleverTab()
-  try
-    exec "nnoremap <silent><unique> " . g:easycomplete_diagnostics_next . " :EasyCompleteNextDiagnostic<CR>"
-    exec "nnoremap <silent><unique> " . g:easycomplete_diagnostics_prev . " :EasyCompletePreviousDiagnostic<CR>"
-  catch /^Vim\%((\a\+)\)\=:E227/
-    if g:easycomplete_lsp_checking != 0
-      call easycomplete#util#log(
-            \ '[Vim-Easycomplete Log] Diagnostic jumping map-key conflict'
-            \ )
-    endif
-    call s:errlog("[ERR]", 'Diagnostic jumping map-key conflict', v:exception)
-  endtry
 
   if g:easycomplete_use_default_cr
     if g:env_is_nvim
@@ -1687,19 +1676,19 @@ function! easycomplete#TypeEnterWithPUM()
       elseif is_snips
         " 如果源是 snips
         call easycomplete#sources#snips#cr(l:item, {})
-        return s:FlushCtrlY()
+        return s:CtrlY()
       elseif !empty(insert_text) && s:LuaSnipSupports()
         " lsp 返回的 snip: 如果支持 luaSnip，则用 luasnip 展开
         call timer_start(10, {
               \ -> easycomplete#sources#snips#ExpandLuaSnipManually(insert_text)
               \ })
-        return s:FlushCtrlY()
+        return s:CtrlY()
       elseif !empty(insert_text) && s:SnipSupports()
         " lsp 返回的 snip: 如果支持 ultiSnip，则用 ultisnip 展开
         let word = get(l:item, "word")
         call s:AsyncRun("UltiSnips#Anon",[insert_text, word], 60)
         call timer_start(30, { -> call(function("UltiSnips#Anon"), [insert_text, word])})
-        return s:FlushCtrlY()
+        return s:CtrlY()
         " TODO 把光标 cursor 到正确的位置
         " call timer_start(170, { -> s:HandleLspSnipPosition(oitems)})
       else
